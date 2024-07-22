@@ -1,0 +1,27 @@
+<div *ngIf="displayedResults && displayedResults.length > 0" class="results-container">
+    <div class="results-header">
+        <h2><i class="fab fa-spotify spotify"></i> Spotify Results</h2>
+        <p>{{ processedResults.length }} results for "{{ searchQuery }}". Click on the release name to see more details.</p>
+    </div>
+    <div *ngFor="let album of displayedResults" class="music-item" @fadeInOut>
+        <div class="item-details">
+            <img [src]="album.imageUrl" alt="Album cover" width="100" />
+            <a [routerLink]="['/detail', album.id]"><h3>{{ album.name }}</h3></a>
+            <p><b class="label">Artists</b> {{ formatArtists(album.artists) }}</p>
+            <p><b class="label">Release date</b> {{ album.releaseDate | date:'dd/MM/yyyy' }}</p>
+            <!-- <p><b class="label">Audio Preview</b></p>
+            <audio *ngIf="album.previewUrl" [src]="album.previewUrl" controls [volume]="0.5"></audio> -->
+            <div class="url-container">
+                <b class="label"><i class="fab fa-spotify spotify"></i> URL</b>
+                <input type="text" [value]="album.spotifyUrl" readonly />
+            </div>
+            <p><b class="label">ISRC</b> {{ album.isrc }}</p>
+        </div>
+    </div>
+    <button *ngIf="!showAllResults && processedResults.length > initialDisplayCount" (click)="showMoreResults()" class="show-more-button">
+        Show More
+    </button>
+</div>
+<div *ngIf="processedResults && processedResults.length === 0" class="results-container">
+    <p>Nothing to show yet, search in the bar above first.</p>
+</div>

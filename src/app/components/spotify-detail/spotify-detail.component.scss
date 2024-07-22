@@ -1,0 +1,178 @@
+// Variables
+$background-color: rgb(8, 52, 52);
+$primary-color: rgb(17, 83, 83);
+$accent-color: aquamarine;
+$text-color: white;
+$font-family: "Avenir", sans-serif;
+
+.url-container {
+    display: flex;
+    align-items: center;
+    margin-top: -15px;
+
+    @media screen and (max-width: 767px) {
+
+        
+        input {
+            width: auto;
+        }
+
+        .copy-button {
+            margin-left: 10px;
+        }
+
+        .copy-message {
+            left: -120px;
+            top: -70px;
+        }
+    }
+}
+
+input[type="text"] {
+    background-color: darken($primary-color, 10%);
+    border: none;
+    border-bottom: 2px solid $accent-color;
+    color: darken($text-color, 20%);
+    padding: 5px;
+    border-radius: 2px;
+    margin-right: -10px;
+    width: 400px;
+    height: 20px;
+}
+
+.platform-links {
+    margin-top: 40px;
+}
+
+.platform-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    align-items: center;
+    grid-gap: 20px;
+}
+
+.platform-link {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    background-color: rgba($accent-color, 0.1);
+    border-radius: 5px;
+    padding: 10px;
+    border: solid 1px $accent-color;
+}
+
+.platform-link:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 15px rgba($accent-color, 0.5);
+    background-color: lighten($background-color, 5%);
+}
+
+.platform-icon {
+    font-size: 20px;
+    color: $accent-color;
+    margin-bottom: 10px;
+}
+
+.platform-name {
+    color: $accent-color;
+    text-align: center;
+    font-size: 14px;
+}
+
+.platform-info {
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+    margin-bottom: 10px;
+}
+
+.platform-description {
+    color: darken($text-color, 20%);
+    font-size: 14px;
+    margin-bottom: 10px;
+    margin-top: -10px;
+}
+
+/* Platform-specific icon colors */
+.platform-icon.spotify {
+    color: #46d377;
+}
+
+.platform-icon.appleMusic {
+    color: #e1e1e1;
+}
+
+.platform-icon.youtubeMusic {
+    color: #eb5151;
+}
+
+.platform-icon.soundcloud {
+    color: #f07d3f;
+}
+
+.platform-icon.deezer {
+    color: #a648ff;
+}
+
+.streaming-link {
+    display: inline-block;
+    background-color: rgba($accent-color, 0.1);
+    color: $accent-color;
+    border: 1px solid $accent-color;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease-in-out;
+    margin-top: 10px;
+    
+    &:hover {
+        background-color: $accent-color;
+        color: $background-color;
+        box-shadow: 0 0 15px rgba($accent-color, 0.5);
+        transform: translateY(-2px);
+        cursor: pointer;
+    }
+    
+    &:active {
+        transform: translateY(0);
+    }
+    
+    &::before {
+        content: '\f0c1'; // Link icon
+        font-family: 'Font Awesome 5 Free';
+        margin-right: 8px;
+    }
+}
+
+.show-all-button {
+    display: inline-block;
+    background-color: rgba($accent-color, 0.1);
+    color: $accent-color;
+    border: 1px solid $accent-color;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease-in-out;
+    margin-top: 10px;
+}
+
+.show-all-button:hover {
+    background-color: $accent-color;
+    color: $background-color;
+    box-shadow: 0 0 15px rgba($accent-color, 0.5);
+    transform: translateY(-2px);
+    cursor: pointer;
+}
+
+.loading-message {
+    text-align: center;
+    font-size: 18px;
+    padding: 30px;
+}

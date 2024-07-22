@@ -1,0 +1,104 @@
+<title *ngIf="detailedAlbum">Music Search App - {{ detailedAlbum.name }} by {{ detailedAlbum.artists }}</title>
+<title *ngIf="!detailedAlbum">Music Search App</title>
+<div *ngIf="detailedAlbum" class="album-details">
+    <button (click)="goBack()" class="back-button">⬅ Back</button>
+    <div class="album-header">
+        <img
+            [src]="detailedAlbum.imageUrl"
+            alt="{{ detailedAlbum.name }} cover"
+            *ngIf="detailedAlbum.imageUrl"
+            class="album-cover"
+        />
+        <div class="album-info">
+            <h2 class="album-name">{{ detailedAlbum.name }}</h2>
+            <p class="album-artists">
+                <b class="label">Artists</b>{{ detailedAlbum.artists }}
+            </p>
+            <p class="album-release-date">
+                <b class="label">Released date</b>
+                {{ detailedAlbum.releaseDate | date : "dd / MM / yyyy" }}
+            </p>
+            <div class="url-container">
+                <p class="label">Spotify URL</p>
+                <input type="text" value="{{ detailedAlbum.spotifyUrl }}" disabled/>
+                <button (click)="copyToClipboard(detailedAlbum.spotifyUrl)" class="copy-button">Copy</button>
+                <p class="copy-message" *ngIf="showSpotifyCopyMessage" [@fadeInOut]>URL copied to clipboard</p>
+            </div>
+            <a
+                [href]="detailedAlbum.spotifyUrl"
+                target="_blank"
+                class="spotify-button"
+                >Open in Spotify</a
+            >
+            <a
+                (click)="loadAlbumInfo(detailedAlbum.spotifyUrl)"
+                class="streaming-link"
+                >Get streaming links for the album</a
+            >
+        </div>
+    </div>
+
+    <div
+        *ngIf="detailedAlbum.tracks && detailedAlbum.tracks.length > 0"
+        class="track-list"
+    >
+        <h3>Tracks</h3>
+        <ul>
+            <li *ngFor="let track of detailedAlbum.tracks" class="track-item">
+                <div class="track-info">
+                    <h4>{{ track.name }}</h4>
+                    <p class="track-artists">
+                        <b class="label">Artists</b>{{ track.artists }}
+                    </p>
+                    <p class="track-isrc">
+                        <b class="label">ISRC</b>{{ track.isrc }}
+                    </p>
+                    <a
+                        *ngIf="track.trackUrl"
+                        (click)="loadTrackInfo(track.trackUrl)"
+                        class="streaming-link"
+                        >Get streaming links for the song</a
+                    >
+                </div>
+                <div class="track-preview">
+                    <audio *ngIf="track.previewUrl" controls [volume]="0.5">
+                        <source [src]="track.previewUrl" type="audio/mpeg" />
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Platform links -->
+    <div *ngIf="!isLoading && detailedAlbum.streamingUrls" class="platform-links">
+        <h3>Listen on other platforms</h3>
+        <p class="platform-description">Click on the name to open the link, or simply click on "Copy" to copy the URL to your clipboard!</p>
+        <div class="platform-grid">
+        <div *ngFor="let platform of displayedPlatforms | keyvalue" class="platform-link">
+            <div class="platform-info">
+            <a [href]="platform.value" target="_blank">
+                <i class="platform-icon" [ngClass]="getIconClass(platform.key)"></i><br>
+                <span class="platform-name">{{ getDisplayName(platform.key) }}</span>
+            </a>
+            </div>
+            <button (click)="copyToClipboard(platform.value, platform.key)" class="copy-button-platform">Copy</button>
+            <p class="copy-message-platform" *ngIf="showPlatformCopyMessage[platform.key]" [@fadeInOut]>
+            URL copied to clipboard
+            </p>
+        </div>
+        </div>
+        <button *ngIf="!showAllPlatforms" (click)="toggleShowAllPlatforms()" class="show-all-button">Show all platforms</button>
+        <button *ngIf="showAllPlatforms" (click)="toggleShowAllPlatforms()" class="show-all-button">Show main platforms</button>
+    </div>
+
+    <!-- Loading spinner -->
+    <div *ngIf="isLoading" class="loading-spinner">
+        <div class="spinner"></div>
+        <p class="loading-text">Loading...</p>
+        <p class="loading-subtext">Don't worry, it won't take long (or any time at all 🎉)</p>
+    </div>
+</div>
+<!-- <div *ngIf="!detailedAlbum" class="loading-message">
+    Loading album details...
+</div> -->

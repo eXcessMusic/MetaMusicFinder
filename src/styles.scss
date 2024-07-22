@@ -1,0 +1,512 @@
+// Main color palette and typography variables
+$background-color: rgb(8, 52, 52);
+$primary-color: rgb(17, 83, 83);
+$accent-color: aquamarine;
+$text-color: white;
+$font-family: "Avenir", sans-serif;
+
+// Base styles for the entire application
+body {
+    background-color: $background-color;
+    color: $text-color;
+    font-family: $font-family;
+    margin: 25px;
+}
+
+// Footer styles (for copyright information)
+footer {
+    text-align: center;
+    color: $accent-color;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+// Global link styles
+a {
+    color: $accent-color;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+        color: darken($accent-color, 15%);
+    }
+}
+
+// Navigation and container styles (for search bar and results container)
+nav, .container {
+    background-color: $primary-color;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 25px;
+    border-radius: 5px;
+    height: 80px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.275);
+    border-top: 0.5px solid rgba($accent-color, 0.656);
+}
+
+.container {
+    margin-top: 10px;
+}
+
+// Search bar component styles
+.search-bar {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+
+    input {
+        // Search input field styles
+        background-color: darken($primary-color, 5%);
+        border: none;
+        border-bottom: 2px solid $accent-color;
+        color: $text-color;
+        padding: 10px;
+        border-radius: 2px;
+        width: 100%;
+
+        &::placeholder {
+            color: rgba($accent-color, 0.6);
+        }
+    }
+
+    button {
+        // Search button styles
+        font-weight: bold;
+        background-color: $accent-color;
+        color: darken($primary-color, 10%);
+        border: none;
+        border-radius: 2px;
+        padding: 10px;
+        width: 100px;
+        transition: all 0.2s ease-in-out;
+
+        &:hover {
+            background-color: darken($accent-color, 10%);
+            color: $background-color;
+            cursor: pointer;
+        }
+    }
+}
+
+// Search navbar button styles
+#search-nav-button {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    background-color: rgba($accent-color, 0.1);
+    border-radius: 5px;
+    padding: 10px;
+    border: solid 1px $accent-color;
+    
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 15px rgba($accent-color, 0.5);
+        background-color: lighten($background-color, 5%);
+    }
+}
+
+// Results container styles
+.results-container {
+    display: flex;
+    flex-direction: column;
+    background-color: $primary-color;
+    padding: 25px;
+    margin-top: 10px;
+    border-radius: 5px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.275);
+    border-top: 0.5px solid rgba($accent-color, 0.656);
+    gap: 15px;
+
+    // Album artwork styles
+    img {
+        width: 400px;
+        height: auto;
+        margin-right: 10px;
+        border-radius: 10px;
+        box-shadow: 0 1px 30px rgba(13, 62, 62, 0.7);
+        border: 1px solid rgba(87, 252, 216, 0.656);
+        transition: all ease-in-out 0.3s;
+    }
+
+    .button {
+        width: 200px;
+        padding: 10px 0 10px 10px;
+    }
+}
+
+.results-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    line-height: 5px;
+    margin-top: -15px;
+}
+
+// Individual music item styles in search results
+.music-item {
+    display: flex;
+    align-items: center;
+    background-color: darken($primary-color, 5%);
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 30px rgba(127, 255, 212, 0.546); // Box shadow on hover
+    }
+
+    img {
+        width: 60px;
+        height: 60px;
+        border-radius: 3px;
+        margin-right: 15px;
+    }
+
+    // Styling of the item's fetched infos (URL's, album name, etc.)
+    .item-details {
+        flex-grow: 1;
+
+        h3 {
+            margin: 5px;
+        }
+
+        p {
+            margin: 5px;
+            color: darken($text-color, 20%);
+        }
+
+        input[type="text"] {
+            background-color: darken($primary-color, 10%);
+            border: none;
+            border-bottom: 2px solid $accent-color;
+            color: darken($text-color, 20%);
+            padding: 5px;
+            border-radius: 2px;
+            margin-right: -10px;
+            width: 400px;
+
+            &::placeholder {
+                color: rgba($accent-color, 0.6);
+            }
+        }
+    }
+}
+
+// Global button styles
+button, .button {
+    background-color: $accent-color;
+    color: darken($primary-color, 10%);
+    border: none;
+    border-radius: 3px;
+    padding: 10px 15px;
+    font-weight: bold;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+        background-color: darken($accent-color, 15%);
+        color: $background-color;
+        cursor: pointer;
+    }
+}
+
+// Copy button styles
+.copy-button {
+    scale: 0.8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    background-color: rgba($accent-color, 0.1);
+    color: $accent-color;
+    border-radius: 5px;
+    padding: 7px;
+    margin-left: -37px;
+    border: solid 1px $accent-color;
+
+    &:hover {
+        transform: scale(1.04);
+        background-color: rgba($accent-color, 0.4);
+        color: $accent-color;
+        box-shadow: 0 0 15px rgba($accent-color, 0.5);
+        cursor: pointer;
+    }
+}
+
+// Copy confirmation message styles ("copied to clipboard")
+.copy-message {
+    position: relative;
+    font-size: 12px;
+    top: -40px;
+    left: -250px;
+    background-color: $background-color;
+    margin: 5px;
+    padding: 5px;
+    border-radius: 2px;
+    color: $accent-color;
+    text-align: center;
+
+    &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -10px;
+        margin: auto;
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 5px solid $accent-color;
+    }
+}
+
+// Platform-specific copy confirmation message styles
+.copy-message-platform {
+    position: absolute;
+    font-size: 12px;
+    top: -70px;
+    background-color: $background-color;
+    margin: 5px;
+    padding: 5px;
+    border-radius: 2px;
+    color: $accent-color;
+    text-align: center;
+
+    &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -10px;
+        margin: auto;
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 5px solid $accent-color;
+    }
+}
+
+// Album details page styles (when an album is selected)
+.album-details {
+    background-color: $primary-color;
+    padding: 30px;
+    margin-top: 10px;
+    border-radius: 5px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.275);
+    border-top: 0.5px solid rgba($accent-color, 0.656);
+}
+
+// Album header styles (cover, title, artists, etc.)
+.album-header {
+    display: flex;
+    align-items: center;
+    
+    .album-cover {
+        width: 200px;
+        height: auto;
+        border-radius: 5px;
+        box-shadow: 0 1px 30px rgba(13, 62, 62, 0.7);
+        border: 1px solid rgba(87, 252, 216, 0.656);
+        transition: all ease-in-out 0.3s;
+    }
+    
+    .album-info {
+        margin-left: 30px;
+        margin-top: -20px;
+        
+        .album-name {
+            font-size: 24px;
+            margin-bottom: -10px;
+        }
+        
+        .album-artists {
+            font-size: 16px;
+            color: darken($text-color, 20%);
+            margin-bottom: 5px;
+        }
+        
+        .album-release-date {
+            font-size: 14px;
+            color: darken($text-color, 30%);
+            margin-bottom: 20px;
+        }
+        
+        .spotify-button {
+            @extend .button;
+            margin-top: 20px;
+            margin-right: 10px;
+        }
+    }
+}
+
+// Track list styles
+.track-list {
+    margin-top: 30px;
+    
+    h3 {
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+    
+    ul {
+        list-style: none;
+        padding: 0;
+        
+        // Track item styles (track name, artist, audio preview, etc.)
+        .track-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: darken($primary-color, 5%);
+            padding: 0 30px 30px 30px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            transition: all 0.2s ease-in-out;
+            
+            &:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 0 30px rgba(127, 255, 212, 0.534);
+            }
+            
+            .track-info {
+                h4 {
+                    margin-bottom: 5px;
+                }
+                
+                .track-isrc {
+                    font-size: 14px;
+                    color: darken($text-color, 30%);
+                }
+            }
+            
+            .track-preview {
+                audio {
+                    width: 300px;
+                }
+            }
+
+            .streaming-link {
+                align-self: flex-start;
+                margin-top: 10px;
+            }
+        }
+    }
+}
+
+// Streaming platform links styles (cards for Spotify, Apple Music, etc.)
+.platform-links {
+    margin-top: 30px;
+    
+    h3 {
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+    
+    ul {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        
+        li {
+            margin-right: 15px;
+            margin-bottom: 15px;
+            
+            .platform-button {
+                @extend .button;
+            }
+        }
+    }
+}
+
+// Loading message styles (only displayed before results are loaded)
+.loading-message {
+    text-align: center;
+    font-size: 18px;
+    padding: 30px;
+}
+
+// Back button styles
+.back-button {
+    @extend .button;
+    margin-bottom: 10px;
+}
+
+// Label styles for various UI elements (like "Artists", "Release Date", "Spotify URL", etc.)
+.label {
+    font-weight: bold;
+    color: $accent-color;
+    border: solid 1px $accent-color;
+    border-radius: 3px;
+    padding: 5px 10px;
+    margin-right: 10px;
+    text-transform: uppercase;
+    font-size: 10px;
+}
+
+// Container for URL display (just used to group the label and the URL)
+.url-container {
+    display: flex;
+}
+
+// Loading spinner main div
+.loading-spinner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+}
+
+// Changes the color and size of the spinner
+.spinner {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 4px solid $background-color;
+    border-top: 4px solid $accent-color;
+    animation: spin 1s linear infinite;
+}
+
+.loading-text {
+    color: $accent-color;
+}
+
+.loading-subtext {
+    color: darken($accent-color, 20%);
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+// Responsive design for mobile devices
+@media only screen and (max-width: 767px) {
+    body {
+        margin: 10px;
+    }
+
+    .results-container {
+        padding: 15px;
+    }
+
+    .music-item {
+        flex-direction: column;
+        align-items: flex-start;
+
+        img {
+            margin-bottom: 10px;
+        }
+    }
+}
