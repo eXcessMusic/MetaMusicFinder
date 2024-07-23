@@ -28,8 +28,8 @@ export class SpotifyService {
   private tokenExpiration: number = 0;
 
   constructor(private http: HttpClient) {
-    this.clientId = environment.spotifyClientId || process.env['SPOTIFY_CLIENT_ID'] || '';
-    this.clientSecret = environment.spotifyClientSecret || process.env['SPOTIFY_CLIENT_SECRET'] || '';
+    this.clientId = environment.spotifyClientId;
+    this.clientSecret = environment.spotifyClientSecret;
 
     if (!this.clientId || !this.clientSecret) {
       console.error('Spotify credentials are not set properly');

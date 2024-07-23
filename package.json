@@ -4,7 +4,9 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "config": "node ./config-env.js",
+    "prebuild": "npm run config",
+    "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:music-api-angular": "node dist/music-api-angular/server/server.mjs"
