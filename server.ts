@@ -12,13 +12,15 @@ export function app(): express.Express {
   const browserDistFolder = resolve(serverDistFolder, '../browser');
   const indexHtml = join(serverDistFolder, 'index.server.html');
 
+  console.log('Server dist folder:', serverDistFolder);
+  console.log('Browser dist folder:', browserDistFolder);
+  console.log('Index HTML path:', indexHtml);
+
   const commonEngine = new CommonEngine();
 
   server.set('view engine', 'html');
   server.set('views', browserDistFolder);
 
-  // Example Express Rest API endpoints
-  // server.get('/api/**', (req, res) => { });
   // Serve static files from /browser
   server.get('*.*', express.static(browserDistFolder, {
     maxAge: '1y'
@@ -37,7 +39,10 @@ export function app(): express.Express {
         providers: [{ provide: APP_BASE_HREF, useValue: baseUrl }],
       })
       .then((html) => res.send(html))
-      .catch((err) => next(err));
+      .catch((err) => {
+        console.error('Error during rendering:', err);
+        next(err);
+      });
   });
 
   return server;
@@ -53,4 +58,5 @@ function run(): void {
   });
 }
 
+console.log('Starting server...');
 run();

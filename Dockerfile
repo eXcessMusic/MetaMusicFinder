@@ -25,5 +25,8 @@ RUN ng build --configuration production
 # Expose the port the app runs on
 EXPOSE 4000
 
+# Set the NODE_ENV environment variable
+ENV NODE_ENV=production
+
 # Run the app when the container launches
 CMD ["npm", "start"]
