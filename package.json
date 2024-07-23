@@ -7,13 +7,13 @@
   },
   "scripts": {
     "ng": "ng",
-    "start": "node server.js",
+    "start": "node dist/music-api-angular/server/main.js",
     "config": "node ./config-env.js",
     "prebuild": "npm run config",
-    "build": "ng build --configuration production",
+    "build": "ng build && ng run music-api-angular:server",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:music-api-angular": "node dist/music-api-angular/server/server.mjs"
+    "serve:ssr:music-api-angular": "node dist/music-api-angular/server/main.js"
   },
   "private": true,
   "dependencies": {

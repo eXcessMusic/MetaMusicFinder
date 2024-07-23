@@ -16,8 +16,8 @@ COPY . .
 # Build the app
 RUN npm run build
 
-# Make port 8080 available to the world outside this container
-EXPOSE 8080
+# Expose the port the app runs on
+EXPOSE 4000
 
 # Run the app when the container launches
 CMD ["npm", "start"]
