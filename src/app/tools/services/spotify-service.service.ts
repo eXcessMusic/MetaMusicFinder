@@ -20,14 +20,21 @@ interface TokenResponse {
   providedIn: 'root'
 })
 export class SpotifyService {
-  private clientId = environment.spotifyClientId;
-  private clientSecret = environment.spotifyClientSecret;
+  private clientId : string;
+  private clientSecret : string;
   private tokenUrl = 'https://accounts.spotify.com/api/token';
   private apiUrl = 'https://api.spotify.com/v1';
   private accessToken: string | null = null;
   private tokenExpiration: number = 0;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.clientId = environment.spotifyClientId || process.env['SPOTIFY_CLIENT_ID'] || '';
+    this.clientSecret = environment.spotifyClientSecret || process.env['SPOTIFY_CLIENT_SECRET'] || '';
+
+    if (!this.clientId || !this.clientSecret) {
+      console.error('Spotify credentials are not set properly');
+    }
+  }
 
   /**
    * Retrieves an access token for the Spotify API
