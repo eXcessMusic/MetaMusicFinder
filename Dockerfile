@@ -1,5 +1,5 @@
-# Use Node.js 18.16.0 (or the latest LTS version)
-FROM node:18.16.0-alpine
+# Use Node.js 18.19.0
+FROM node:18.19.0-alpine
 
 # Set the working directory in the container to /app
 WORKDIR /app

@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "type": "module",
   "engines": {
-    "node": "18.x",
-    "npm": "9.x"
+    "node": ">=18.19.0",
+    "npm": ">=9.0.0"
   },
   "scripts": {
     "ng": "ng",
