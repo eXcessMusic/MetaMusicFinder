@@ -1,9 +1,9 @@
 {
-  "name": "music-api-angular",
-  "version": "0.0.0",
+  "name": "music-search-angular",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "node server.js",
     "config": "node ./config-env.js",
     "prebuild": "npm run config",
     "build": "ng build --configuration production",
