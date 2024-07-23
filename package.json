@@ -7,7 +7,7 @@
   },
   "scripts": {
     "ng": "ng",
-    "start": "node dist/music-api-angular/server/main.js",
+    "start": "node dist/music-api-angular/server/main.server.mjs",
     "config": "node ./config-env.js",
     "prebuild": "npm run config",
     "build": "ng build && ng run music-api-angular:server",
