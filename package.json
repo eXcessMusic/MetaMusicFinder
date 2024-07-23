@@ -1,13 +1,14 @@
 {
   "name": "music-search-angular",
   "version": "1.0.0",
+  "type": "module",
   "engines": {
     "node": "18.x",
     "npm": "9.x"
   },
   "scripts": {
     "ng": "ng",
-    "start": "node -e \"console.log('Current directory:', process.cwd()); console.log('Directory contents:', require('fs').readdirSync('.')); console.log('Dist contents:', require('fs').readdirSync('./dist')); console.log('Server contents:', require('fs').readdirSync('./dist/music-search-angular/server')); console.log('Main server file contents:', require('fs').readFileSync('./dist/music-search-angular/server/main.server.mjs', 'utf8'));\" && node dist/music-search-angular/server/main.server.mjs",
+    "start": "node --experimental-specifier-resolution=node dist/music-search-angular/server/main.server.mjs",
     "config": "node ./config-env.js",
     "prebuild": "npm run config",
     "build": "ng build --configuration production",

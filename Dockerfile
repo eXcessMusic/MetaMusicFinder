@@ -1,5 +1,5 @@
-# Use Node.js 18
-FROM node:18-alpine
+# Use Node.js 18.16.0 (or the latest LTS version)
+FROM node:18.16.0-alpine
 
 # Set the working directory in the container to /app
 WORKDIR /app
@@ -28,8 +28,9 @@ RUN node --version && npm list --depth=0
 # Expose the port the app runs on
 EXPOSE 4000
 
-# Set the NODE_ENV environment variable
+# Set environment variables
 ENV NODE_ENV=production
+ENV NODE_OPTIONS="--experimental-specifier-resolution=node"
 
 # Run the app when the container launches
 CMD ["npm", "start"]

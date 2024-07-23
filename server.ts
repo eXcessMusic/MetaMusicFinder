@@ -59,4 +59,8 @@ function run(): void {
 }
 
 console.log('Starting server...');
-run();
+try {
+  run();
+} catch (error) {
+  console.error('Error starting server:', error);
+}
