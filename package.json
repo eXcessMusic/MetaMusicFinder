@@ -10,10 +10,10 @@
     "start": "node dist/music-search-angular/server/main.server.mjs",
     "config": "node ./config-env.js",
     "prebuild": "npm run config",
-    "build": "ng build && ng run music-search-angular:server",
+    "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:music-search-angular": "node dist/music-search-angular/server/main.js"
+    "serve:ssr:music-search-angular": "node dist/music-search-angular/server/main.server.mjs"
   },
   "private": true,
   "dependencies": {

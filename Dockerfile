@@ -10,11 +10,17 @@ COPY package*.json ./
 # Install dependencies
 RUN npm ci
 
+# Install Angular CLI globally
+RUN npm install -g @angular/cli
+
 # Copy the rest of the application code to the working directory
 COPY . .
 
-# Build the app
-RUN npm run build
+# Run the config script
+RUN npm run config
+
+# Build the app using Angular CLI
+RUN ng build --configuration production
 
 # Expose the port the app runs on
 EXPOSE 4000
