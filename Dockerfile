@@ -1,5 +1,5 @@
-# Use an official Node runtime as the parent image
-FROM node:14
+# Use Node.js 18
+FROM node:18-alpine
 
 # Set the working directory in the container to /app
 WORKDIR /app
@@ -7,8 +7,8 @@ WORKDIR /app
 # Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
 
-# Install any needed packages specified in package.json
-RUN npm install
+# Install dependencies
+RUN npm ci
 
 # Copy the rest of the application code to the working directory
 COPY . .

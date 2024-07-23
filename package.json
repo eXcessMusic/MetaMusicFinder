@@ -1,6 +1,10 @@
 {
   "name": "music-search-angular",
   "version": "1.0.0",
+  "engines": {
+    "node": "18.x",
+    "npm": "9.x"
+  },
   "scripts": {
     "ng": "ng",
     "start": "node server.js",
