@@ -22,6 +22,9 @@ RUN npm run config
 # Build the app using Angular CLI
 RUN ng build --configuration production
 
+# Print Node.js version and list installed packages
+RUN node --version && npm list --depth=0
+
 # Expose the port the app runs on
 EXPOSE 4000
 
