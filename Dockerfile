@@ -17,7 +17,7 @@ RUN npm install -g @angular/cli
 COPY . .
 
 # Run the config script
-RUN npm run config
+RUN node config-env.mjs
 
 # Build the app using Angular CLI
 RUN ng build --configuration production

@@ -9,7 +9,7 @@
   "scripts": {
     "ng": "ng",
     "start": "node --experimental-specifier-resolution=node dist/music-search-angular/server/main.server.mjs",
-    "config": "node ./config-env.js",
+    "config": "node config-env.mjs",
     "prebuild": "npm run config",
     "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
