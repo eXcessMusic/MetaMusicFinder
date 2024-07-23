@@ -13,7 +13,7 @@
     "build": "ng build && ng run music-search-angular:server",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:music-api-angular": "node dist/music-search-angular/server/main.js"
+    "serve:ssr:music-search-angular": "node dist/music-search-angular/server/main.js"
   },
   "private": true,
   "dependencies": {

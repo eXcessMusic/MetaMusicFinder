@@ -80,10 +80,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "music-api-angular:build:production"
+              "buildTarget": "music-search-angular:build:production"
             },
             "development": {
-              "buildTarget": "music-api-angular:build:development"
+              "buildTarget": "music-search-angular:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -91,7 +91,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "music-api-angular:build"
+            "buildTarget": "music-search-angular:build"
           }
         },
         "test": {
