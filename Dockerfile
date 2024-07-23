@@ -1,5 +1,5 @@
-# Use Node.js 18.19.0
-FROM node:18.19.0-alpine
+# Use Node.js 18.19
+FROM node:18.19-alpine
 
 # Set the working directory in the container to /app
 WORKDIR /app
@@ -16,7 +16,7 @@ RUN npm install -g @angular/cli
 # Copy the rest of the application code to the working directory
 COPY . .
 
-# Run the config script
+# Run the config script to create environment files
 RUN node config-env.mjs
 
 # Build the app using Angular CLI
