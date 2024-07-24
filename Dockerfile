@@ -1,36 +1,16 @@
-# Use Node.js 18.19
-FROM node:18.19-alpine
-
-# Set the working directory in the container to /app
-WORKDIR /app
-
-# Copy package.json and package-lock.json to the working directory
-COPY package*.json ./
-
-# Install dependencies
+FROM node:19.7.0-alpine AS build
+WORKDIR /usr/src/app
+COPY package.json package-lock.json ./
 RUN npm ci
-
-# Install Angular CLI globally
-RUN npm install -g @angular/cli
-
-# Copy the rest of the application code to the working directory
 COPY . .
-
 # Run the config script to create environment files
 RUN node config-env.mjs
+RUN rm -rf dist/*
+RUN npm run build
 
-# Build the app using Angular CLI
-RUN ng build --configuration production
 
-# Print Node.js version and list installed packages
-RUN node --version && npm list --depth=0
 
-# Expose the port the app runs on
-EXPOSE 4000
-
-# Set environment variables
-ENV NODE_ENV=production
-ENV NODE_OPTIONS="--experimental-specifier-resolution=node"
-
-# Run the app when the container launches
-CMD ["npm", "start"]
+FROM nginx:1.23.2-alpine
+EXPOSE 80
+COPY ./nginx.conf /etc/nginx/nginx.conf
+COPY --from=build /usr/src/app/dist/music-search-angular /usr/share/nginx/html
