@@ -1,14 +1,9 @@
 {
   "name": "music-search-angular",
   "version": "1.0.0",
-  "type": "module",
-  "engines": {
-    "node": ">=18.19.0",
-    "npm": ">=9.0.0"
-  },
   "scripts": {
     "ng": "ng",
-    "start": "node --experimental-specifier-resolution=node dist/music-search-angular/server/main.server.mjs",
+    "start": "ng serve",
     "config": "node config-env.mjs",
     "prebuild": "npm run config",
     "build": "ng build --configuration production",
