@@ -16,6 +16,9 @@ COPY . .
 # Supprimer les précédents builds (le cas échéant)
 RUN rm -rf dist/*
 
+# Create environment files
+RUN node config-env.mjs
+
 # Construire l'application Angular
 RUN npm run build
 
