@@ -14,9 +14,9 @@ interface TokenResponse {
 
 declare global {
   interface Window {
-    RUNTIME_CONFIG: {
-      SPOTIFY_CLIENT_ID: string;
-      SPOTIFY_CLIENT_SECRET: string;
+    RUNTIME_CONFIG?: {
+      SPOTIFY_CLIENT_ID?: string;
+      SPOTIFY_CLIENT_SECRET?: string;
     };
   }
 }
@@ -37,8 +37,14 @@ export class SpotifyService {
   private tokenExpiration: number = 0;
 
   constructor(private http: HttpClient) {
-    this.clientId = window.RUNTIME_CONFIG.SPOTIFY_CLIENT_ID;
-    this.clientSecret = window.RUNTIME_CONFIG.SPOTIFY_CLIENT_SECRET;
+    console.log('SpotifyService constructor called');
+    console.log('Window RUNTIME_CONFIG:', window.RUNTIME_CONFIG);
+    
+    this.clientId = window.RUNTIME_CONFIG?.SPOTIFY_CLIENT_ID || '';
+    this.clientSecret = window.RUNTIME_CONFIG?.SPOTIFY_CLIENT_SECRET || '';
+
+    console.log('ClientId:', this.clientId);
+    console.log('ClientSecret:', this.clientSecret);
 
     if (!this.clientId || !this.clientSecret) {
       console.error('Spotify credentials are not set properly');
