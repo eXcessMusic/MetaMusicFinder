@@ -1,62 +1,46 @@
-import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, from, throwError } from 'rxjs';
 import { switchMap, catchError, map } from 'rxjs/operators';
-import { isPlatformBrowser } from '@angular/common';
+import { environment } from '../../../environments/environment';
 
+/**
+ * Interface for the Spotify API token response
+ */
 interface TokenResponse {
   access_token: string;
   expires_in: number;
 }
 
-declare global {
-  interface Window {
-    RUNTIME_CONFIG?: {
-      SPOTIFY_CLIENT_ID?: string;
-      SPOTIFY_CLIENT_SECRET?: string;
-    };
-  }
-}
-
+/**
+ * Service for interacting with the Spotify API
+ * Handles authentication and provides methods for various API endpoints
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class SpotifyService {
-  private clientId: string = '';
-  private clientSecret: string = '';
+  private clientId : string;
+  private clientSecret : string;
   private tokenUrl = 'https://accounts.spotify.com/api/token';
   private apiUrl = 'https://api.spotify.com/v1';
   private accessToken: string | null = null;
   private tokenExpiration: number = 0;
 
-  constructor(
-    private http: HttpClient,
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) {
-    console.log('SpotifyService constructor called');
-    
-    if (isPlatformBrowser(this.platformId)) {
-      console.log('Running in browser');
-      this.initializeCredentials();
-    } else {
-      console.log('Running on server');
-    }
-  }
-
-  private initializeCredentials(): void {
-    console.log('Window RUNTIME_CONFIG:', window.RUNTIME_CONFIG);
-    
-    this.clientId = window.RUNTIME_CONFIG?.SPOTIFY_CLIENT_ID || '';
-    this.clientSecret = window.RUNTIME_CONFIG?.SPOTIFY_CLIENT_SECRET || '';
-
-    console.log('ClientId:', this.clientId);
-    console.log('ClientSecret:', this.clientSecret);
+  constructor(private http: HttpClient) {
+    this.clientId = environment.spotifyClientId;
+    this.clientSecret = environment.spotifyClientSecret;
 
     if (!this.clientId || !this.clientSecret) {
       console.error('Spotify credentials are not set properly');
     }
   }
 
+  /**
+   * Retrieves an access token for the Spotify API
+   * If a valid token exists, it returns it; otherwise, it requests a new one
+   * @returns An Observable that emits the access token
+   */
   private getAccessToken(): Observable<string> {
     if (this.accessToken && Date.now() < this.tokenExpiration) {
       return from(Promise.resolve(this.accessToken));
@@ -82,6 +66,10 @@ export class SpotifyService {
     );
   }
 
+  /**
+   * Generates headers with the current access token
+   * @returns An Observable that emits HttpHeaders
+   */
   private getHeaders(): Observable<HttpHeaders> {
     return this.getAccessToken().pipe(
       map(token => new HttpHeaders({
@@ -90,6 +78,11 @@ export class SpotifyService {
     );
   }
 
+  /**
+   * Searches for tracks on Spotify
+   * @param query The search query string
+   * @returns An Observable that emits the search results
+   */
   searchAlbum(query: string): Observable<any> {
     return this.getHeaders().pipe(
       switchMap(headers => 
@@ -98,6 +91,11 @@ export class SpotifyService {
     );
   }
 
+  /**
+   * Retrieves details for a specific album
+   * @param albumId The Spotify ID of the album
+   * @returns An Observable that emits the album details
+   */
   getAlbumDetails(albumId: string): Observable<any> {
     return this.getHeaders().pipe(
       switchMap(headers => 
@@ -106,6 +104,11 @@ export class SpotifyService {
     );
   }
 
+  /**
+   * Retrieves details for one or more tracks
+   * @param trackIds A comma-separated string of Spotify track IDs
+   * @returns An Observable that emits the track details
+   */
   getTrackDetails(trackIds: string): Observable<any> {
     return this.getHeaders().pipe(
       switchMap(headers => 
