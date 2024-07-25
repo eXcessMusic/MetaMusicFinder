@@ -13,8 +13,13 @@ EXPOSE 80
 COPY ./nginx.conf /etc/nginx/nginx.conf
 COPY --from=build /usr/src/app/dist/music-search-angular/browser /usr/share/nginx/html
 
-# Replace placeholders in index.html with actual environment variables
-RUN sed -i "s/{{SPOTIFY_CLIENT_ID}}/$SPOTIFY_CLIENT_ID/g" /usr/share/nginx/html/index.html && \
-    sed -i "s/{{SPOTIFY_CLIENT_SECRET}}/$SPOTIFY_CLIENT_SECRET/g" /usr/share/nginx/html/index.html
+# Install envsubst
+RUN apk add --no-cache gettext
 
-CMD ["nginx", "-g", "daemon off;"]
+# Create a script to replace placeholders and start nginx
+RUN echo '#!/bin/sh\n\
+envsubst < /usr/share/nginx/html/index.html > /usr/share/nginx/html/index.html.tmp\n\
+mv /usr/share/nginx/html/index.html.tmp /usr/share/nginx/html/index.html\n\
+nginx -g "daemon off;"' > /docker-entrypoint.sh && chmod +x /docker-entrypoint.sh
+
+CMD ["/docker-entrypoint.sh"]
