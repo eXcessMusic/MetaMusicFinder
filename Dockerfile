@@ -13,6 +13,12 @@ RUN npm ci
 # Copier le reste du code source de l'application
 COPY . .
 
+# Set environment variables
+ARG SPOTIFY_CLIENT_ID
+ARG SPOTIFY_CLIENT_SECRET
+ENV SPOTIFY_CLIENT_ID=$SPOTIFY_CLIENT_ID
+ENV SPOTIFY_CLIENT_SECRET=$SPOTIFY_CLIENT_SECRET
+
 # Supprimer les précédents builds (le cas échéant)
 RUN rm -rf dist/*
 
