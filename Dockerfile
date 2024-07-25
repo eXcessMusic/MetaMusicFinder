@@ -16,10 +16,8 @@ COPY --from=build /usr/src/app/dist/music-search-angular/browser /usr/share/ngin
 # Install envsubst
 RUN apk add --no-cache gettext
 
-# Create a script to replace placeholders and start nginx
-RUN echo '#!/bin/sh\n\
-envsubst < /usr/share/nginx/html/index.html > /usr/share/nginx/html/index.html.tmp\n\
-mv /usr/share/nginx/html/index.html.tmp /usr/share/nginx/html/index.html\n\
-nginx -g "daemon off;"' > /docker-entrypoint.sh && chmod +x /docker-entrypoint.sh
+# Copy a custom nginx startup script
+COPY nginx-entrypoint.sh /nginx-entrypoint.sh
+RUN chmod +x /nginx-entrypoint.sh
 
-CMD ["/docker-entrypoint.sh"]
+CMD ["/bin/sh", "/nginx-entrypoint.sh"]
