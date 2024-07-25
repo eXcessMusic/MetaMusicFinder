@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, from, throwError } from 'rxjs';
 import { switchMap, catchError, map } from 'rxjs/operators';
-import { environment } from '../../../environments/environment';
+// import { environment } from '../../../environments/environment';
 
 /**
  * Interface for the Spotify API token response
