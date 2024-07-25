@@ -5,34 +5,22 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const environmentFilesPath = path.join(__dirname, 'src', 'environments');
-
-// Ensure the environments directory exists
-if (!fs.existsSync(environmentFilesPath)) {
-    fs.mkdirSync(environmentFilesPath, { recursive: true });
-}
-
-const environmentPath = path.join(environmentFilesPath, 'environment.ts');
-const productionEnvironmentPath = path.join(environmentFilesPath, 'environment.prod.ts');
-
-const environmentContent = `
-export const environment = {
-    production: false,
-    spotifyClientId: '${process.env.SPOTIFY_CLIENT_ID}',
-    spotifyClientSecret: '${process.env.SPOTIFY_CLIENT_SECRET}'
+const runtimeConfig = `
+window.RUNTIME_CONFIG = {
+    SPOTIFY_CLIENT_ID: '${process.env.SPOTIFY_CLIENT_ID || ''}',
+    SPOTIFY_CLIENT_SECRET: '${process.env.SPOTIFY_CLIENT_SECRET || ''}'
 };
 `;
 
+fs.writeFileSync(path.join(__dirname, 'src', 'assets', 'runtime-config.js'), runtimeConfig);
+console.log('Created runtime-config.js');
+
+// Create a placeholder environment.prod.ts
+const productionEnvironmentPath = path.join(__dirname, 'src', 'environments', 'environment.prod.ts');
 const productionEnvironmentContent = `
 export const environment = {
-    production: true,
-    spotifyClientId: '${process.env.SPOTIFY_CLIENT_ID}',
-    spotifyClientSecret: '${process.env.SPOTIFY_CLIENT_SECRET}'
+    production: true
 };
 `;
-
-fs.writeFileSync(environmentPath, environmentContent);
-console.log('Created environment.ts');
-
 fs.writeFileSync(productionEnvironmentPath, productionEnvironmentContent);
 console.log('Created environment.prod.ts');

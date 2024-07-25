@@ -1,44 +1,31 @@
-# Étape 1 : Construction de l'application Angular
+# Stage 1: Build the Angular application
 FROM node:18.18.0-alpine AS build
-
-# Définir le répertoire de travail
+# Set the working directory
 WORKDIR /usr/src/app
-
-# Copier package.json et package-lock.json
+# Copy package.json and package-lock.json
 COPY package.json package-lock.json ./
-
-# Installer les dépendances
+# Install dependencies
 RUN npm ci
-
-# Copier le reste du code source de l'application
+# Copy the rest of the application source code
 COPY . .
-
-# Set environment variables
-ARG SPOTIFY_CLIENT_ID
-ARG SPOTIFY_CLIENT_SECRET
-ENV SPOTIFY_CLIENT_ID=$SPOTIFY_CLIENT_ID
-ENV SPOTIFY_CLIENT_SECRET=$SPOTIFY_CLIENT_SECRET
-
-# Supprimer les précédents builds (le cas échéant)
+# Remove previous builds (if any)
 RUN rm -rf dist/*
-
 # Create environment files
 RUN node config-env.mjs
-
-# Construire l'application Angular
+# Build the Angular application
 RUN npm run build
+# Create runtime config
+RUN node config-env.mjs
+# Copy runtime-config.js to the dist folder
+RUN cp src/assets/runtime-config.js dist/music-search-angular/browser/assets/
 
-# Étape 2 : Servir l'application avec Nginx
+# Stage 2: Serve the application with Nginx
 FROM nginx:1.23.2-alpine
-
-# Exposer le port 80
+# Expose port 80
 EXPOSE 80
-
-# Copier la configuration de Nginx
+# Copy Nginx configuration
 COPY ./nginx.conf /etc/nginx/nginx.conf
-
-# Copier la sortie du build Angular dans le répertoire html de Nginx
+# Copy the Angular build output to Nginx's html directory
 COPY --from=build /usr/src/app/dist/music-search-angular/browser /usr/share/nginx/html
-
-# Démarrer le serveur Nginx
+# Start Nginx server
 CMD ["nginx", "-g", "daemon off;"]

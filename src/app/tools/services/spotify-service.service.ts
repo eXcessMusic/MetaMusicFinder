@@ -12,6 +12,15 @@ interface TokenResponse {
   expires_in: number;
 }
 
+declare global {
+  interface Window {
+    RUNTIME_CONFIG: {
+      SPOTIFY_CLIENT_ID: string;
+      SPOTIFY_CLIENT_SECRET: string;
+    };
+  }
+}
+
 /**
  * Service for interacting with the Spotify API
  * Handles authentication and provides methods for various API endpoints
@@ -20,16 +29,16 @@ interface TokenResponse {
   providedIn: 'root'
 })
 export class SpotifyService {
-  private clientId : string;
-  private clientSecret : string;
+  private clientId: string;
+  private clientSecret: string;
   private tokenUrl = 'https://accounts.spotify.com/api/token';
   private apiUrl = 'https://api.spotify.com/v1';
   private accessToken: string | null = null;
   private tokenExpiration: number = 0;
 
   constructor(private http: HttpClient) {
-    this.clientId = environment.spotifyClientId;
-    this.clientSecret = environment.spotifyClientSecret;
+    this.clientId = window.RUNTIME_CONFIG.SPOTIFY_CLIENT_ID;
+    this.clientSecret = window.RUNTIME_CONFIG.SPOTIFY_CLIENT_SECRET;
 
     if (!this.clientId || !this.clientSecret) {
       console.error('Spotify credentials are not set properly');
