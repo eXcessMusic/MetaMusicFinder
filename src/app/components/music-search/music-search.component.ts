@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SpotifyService } from '../../tools/services/spotify-service.service';
-import { catchError } from 'rxjs/operators';
+import { catchError, finalize } from 'rxjs/operators';
 import { Title } from '@angular/platform-browser';
 import { of } from 'rxjs';
 
@@ -13,24 +13,25 @@ import { of } from 'rxjs';
   templateUrl: './music-search.component.html',
   styleUrls: ['./music-search.component.scss']
 })
-export class MusicSearchComponent {
+export class MusicSearchComponent implements OnInit {
   // The current search query entered by the user
   searchQuery: string = '';
-  
   // Array to store the search results from Spotify
   spotifyResults: any[] = [];
-  
   // String to store any error messages that occur during the search
   errorMessage: string = '';
+  // Boolean to track if a search is in progress
+  isLoading: boolean = false;
 
   /**
    * Constructor for MusicSearchComponent
    * @param spotifyService Injected SpotifyService for making API calls to Spotify
+   * @param titleService Injected Title service for setting page title
    */
   constructor(private spotifyService: SpotifyService, private titleService: Title) {}
 
   ngOnInit() {
-    this.titleService.setTitle('Music Search App - Search'); // Set the default title of the page
+    this.titleService.setTitle('MetaMusicFinder - Search'); // Set the default title of the page
   }
 
   /**
@@ -41,18 +42,21 @@ export class MusicSearchComponent {
     // Only perform the search if there's a non-empty search query
     if (this.searchQuery) {
       // Reset error message and clear previous results
+      this.isLoading = true;
       this.errorMessage = '';
       this.spotifyResults = [];
-      
+
       // Call the SpotifyService to perform the search
       this.spotifyService.searchAlbum(this.searchQuery)
         .pipe(
-          // Handle any errors that occur during the API call
           catchError(error => {
             console.error('Error searching Spotify:', error);
             this.errorMessage = 'An error occurred while searching. Please try again.';
             // Return an empty observable to continue the stream
             return of(null);
+          }),
+          finalize(() => {
+            this.isLoading = false;
           })
         )
         .subscribe(searchResponse => {

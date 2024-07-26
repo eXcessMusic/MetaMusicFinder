@@ -1,7 +1,14 @@
-<div *ngIf="displayedResults && displayedResults.length > 0" class="results-container">
+<!-- Loading spinner -->
+<div *ngIf="isLoading" class="loading-spinner results-container">
+    <div class="spinner"></div>
+    <p class="loading-text">Loading...</p>
+    <p class="loading-subtext">Don't worry, it won't take long (or any time at all 🎉)</p>
+</div>
+<div *ngIf="!isLoading && displayedResults && displayedResults.length > 0" class="results-container">
     <div class="results-header">
         <h2><i class="fab fa-spotify spotify"></i> Spotify Results</h2>
-        <p>{{ processedResults.length }} results for "{{ searchQuery }}". Click on the release name to see more details.</p>
+        <p>{{ processedResults.length }} results for "{{ searchQueryCopy }}". Showing {{ displayedResults.length }} of them.</p>
+        <p>Click on the release name to see more details.</p>
     </div>
     <div *ngFor="let album of displayedResults" class="music-item" @fadeInOut>
         <div class="item-details">
@@ -22,6 +29,30 @@
         Show More
     </button>
 </div>
-<div *ngIf="processedResults && processedResults.length === 0" class="results-container">
-    <p>Nothing to show yet, search in the bar above first.</p>
+<div *ngIf="!isLoading && processedResults && processedResults.length === 0" class="home-container">
+    <div class="welcome-header">
+        <i class="fa-solid fa-music music-icon"></i>
+        <h2>Welcome to MetaMusicFinder</h2>
+    </div>
+    <div class="welcome-content">
+        <p>Discover and explore your favorite music's metadata with our powerful search engine.</p>
+        <ul class="feature-list">
+            <li>
+                <i class="fa-solid fa-magnifying-glass feature-icon"></i>
+                <span>Search for music by <b>artist</b>, <b>album</b>, and/or <b>track name</b></span>
+            </li>
+            <li>
+                <i class="fa-solid fa-circle-info feature-icon"></i>
+                <span>View detailed information including <b>ISRC</b>, <b>release date</b>, and <b>artists</b> by clicking on the release name</span>
+            </li>
+            <li>
+                <i class="fa-solid fa-link feature-icon"></i>
+                <span>Get <b>streaming links for various platforms</b> with a single click</span>
+            </li>
+        </ul>
+        <p>Start your music metadata quest now by entering a search query above !</p>
+    </div>
+</div>
+<div *ngIf="!isLoading && processedResults && processedResults.length === 0" class="results-container">
+    <p><i class="fa-regular fa-circle-up" style="color: aquamarine"></i> Nothing to show yet, search in the bar above first.</p>
 </div>

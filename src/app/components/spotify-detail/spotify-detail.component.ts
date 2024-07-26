@@ -113,7 +113,7 @@ export class SpotifyDetailComponent implements OnInit {
         };
 
         // Set the page title with album details
-        this.titleService.setTitle(`Music Search App - ${this.detailedAlbum.name} by ${this.detailedAlbum.artists}`);
+        this.titleService.setTitle(`MetaMusicFinder - ${this.detailedAlbum.name} by ${this.detailedAlbum.artists}`);
 
         // Fetch track details for each track in the album
         const trackIds = albumDetails.tracks.items.map((track: any) => track.id);
@@ -129,13 +129,13 @@ export class SpotifyDetailComponent implements OnInit {
           },
           error => {
             console.error('Error loading track details', error);
-            this.titleService.setTitle('Music Search App - Error Loading Tracks');
+            this.titleService.setTitle('MetaMusicFinder - Error Loading Tracks');
           }
         );
       },
       error => {
         console.error('Error loading album details', error);
-        this.titleService.setTitle('Music Search App - Error Loading Album');
+        this.titleService.setTitle('MetaMusicFinder - Error Loading Album');
       }
     );
   }
@@ -287,5 +287,26 @@ export class SpotifyDetailComponent implements OnInit {
    */
   goBack() {
     this.router.navigate(['/search']);
+  }
+
+  saveUrlsToFile() {
+    if (this.detailedAlbum && this.detailedAlbum.streamingUrls) {
+      let content = `${this.detailedAlbum.name} by ${this.detailedAlbum.artists}\n\n`;
+      content += `Streaming URLs\n`;
+      content += `---------------\n\n`;
+      
+      for (const [platform, url] of Object.entries(this.detailedAlbum.streamingUrls)) {
+        content += `${platform}  :  ${url}\n`;
+      }
+      content += `\nList generated with ♥ by MetaMusicFinder`;
+
+      const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${this.detailedAlbum.name.replace(/\s+/g, '_')}_streaming_urls.txt`;
+      link.click();
+      window.URL.revokeObjectURL(url);
+    }
   }
 }

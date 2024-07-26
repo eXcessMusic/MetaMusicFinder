@@ -90,6 +90,7 @@
         </div>
         <button *ngIf="!showAllPlatforms" (click)="toggleShowAllPlatforms()" class="show-all-button">Show all platforms</button>
         <button *ngIf="showAllPlatforms" (click)="toggleShowAllPlatforms()" class="show-all-button">Show main platforms</button>
+        <button (click)="saveUrlsToFile()" class="save-button"><i class="fa-solid fa-floppy-disk"></i> Save All URL's as txt file</button>
     </div>
 
     <!-- Loading spinner -->

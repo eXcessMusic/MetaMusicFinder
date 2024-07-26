@@ -1,6 +1,6 @@
 <div class="search-bar container">
     <input [(ngModel)]="searchQuery" (keyup.enter)="search()" placeholder="Search for music...">
-    <button (click)="search()">🔍 Search</button>
+    <button (click)="search()"><i class="fa-solid fa-magnifying-glass feature-icon"></i> Search</button>
 </div>
 
-<app-spotify-results [results]="spotifyResults" [searchQuery]="searchQuery"></app-spotify-results>
+<app-spotify-results [results]="spotifyResults" [searchQuery]="searchQuery" [isLoading]="isLoading"></app-spotify-results>

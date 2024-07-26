@@ -144,6 +144,68 @@ nav, .container {
     margin-top: -15px;
 }
 
+.home-container {
+    display: flex;
+    flex-direction: column;
+    background-color: $primary-color;
+    padding: 25px;
+    margin-top: 10px;
+    border-radius: 5px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.275);
+    border-top: 0.5px solid rgba($accent-color, 0.656);
+
+    .welcome-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+
+        .music-icon {
+            font-size: 36px;
+            margin-right: 15px;
+            color: $accent-color;
+            margin-bottom: -20px;
+        }
+
+        h2 {
+            color: $accent-color;
+            margin: 0;
+            margin-bottom: -20px;
+        }
+    }
+
+    .welcome-content {
+        p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+            color: $text-color;
+        }
+    }
+
+    .feature-list {
+        list-style-type: none;
+        padding: 0;
+        margin-top: 20px;
+
+        li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+
+            .feature-icon {
+            font-size: 24px;
+            margin-right: 15px;
+            color: $accent-color;
+            width: 24px; // Fixed width for alignment
+            text-align: center;
+            }
+
+            span {
+            color: $text-color;
+            }
+        }
+    }
+}
+
 // Individual music item styles in search results
 .music-item {
     display: flex;
