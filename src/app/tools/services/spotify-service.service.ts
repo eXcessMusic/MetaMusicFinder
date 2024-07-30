@@ -1,82 +1,15 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, from, throwError } from 'rxjs';
-import { switchMap, catchError, map } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
-/**
- * Interface for the Spotify API token response
- */
-interface TokenResponse {
-  access_token: string;
-  expires_in: number;
-}
-
-/**
- * Service for interacting with the Spotify API
- * Handles authentication and provides methods for various API endpoints
- */
 @Injectable({
   providedIn: 'root'
 })
 export class SpotifyService {
-  private clientId : string;
-  private clientSecret : string;
-  private tokenUrl = 'https://accounts.spotify.com/api/token';
-  private apiUrl = 'https://api.spotify.com/v1';
-  private accessToken: string | null = null;
-  private tokenExpiration: number = 0;
+  private apiUrl = environment.backendUrl || 'http://localhost:3000/api';
 
-  constructor(private http: HttpClient) {
-    this.clientId = environment.spotifyClientId;
-    this.clientSecret = environment.spotifyClientSecret;
-
-    if (!this.clientId || !this.clientSecret) {
-      console.error('Spotify credentials are not set properly');
-    }
-  }
-
-  /**
-   * Retrieves an access token for the Spotify API
-   * If a valid token exists, it returns it; otherwise, it requests a new one
-   * @returns An Observable that emits the access token
-   */
-  private getAccessToken(): Observable<string> {
-    if (this.accessToken && Date.now() < this.tokenExpiration) {
-      return from(Promise.resolve(this.accessToken));
-    }
-
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Basic ' + btoa(this.clientId + ':' + this.clientSecret)
-    });
-
-    const body = 'grant_type=client_credentials';
-
-    return this.http.post<TokenResponse>(this.tokenUrl, body, { headers }).pipe(
-      map((response: TokenResponse) => {
-        this.accessToken = response.access_token;
-        this.tokenExpiration = Date.now() + (response.expires_in * 1000);
-        return this.accessToken;
-      }),
-      catchError(error => {
-        console.error('Error getting access token', error);
-        return throwError(() => new Error('Failed to get access token'));
-      })
-    );
-  }
-
-  /**
-   * Generates headers with the current access token
-   * @returns An Observable that emits HttpHeaders
-   */
-  private getHeaders(): Observable<HttpHeaders> {
-    return this.getAccessToken().pipe(
-      map(token => new HttpHeaders({
-        'Authorization': `Bearer ${token}`
-      }))
-    );
-  }
+  constructor(private http: HttpClient) { }
 
   /**
    * Searches for tracks on Spotify
@@ -84,11 +17,9 @@ export class SpotifyService {
    * @returns An Observable that emits the search results
    */
   searchAlbum(query: string): Observable<any> {
-    return this.getHeaders().pipe(
-      switchMap(headers => 
-        this.http.get(`${this.apiUrl}/search?q=${query}&type=track`, { headers })
-      )
-    );
+    return this.http.get(`${this.apiUrl}/search`, {
+      params: { q: query, type: 'track,album' }
+    });
   }
 
   /**
@@ -97,11 +28,7 @@ export class SpotifyService {
    * @returns An Observable that emits the album details
    */
   getAlbumDetails(albumId: string): Observable<any> {
-    return this.getHeaders().pipe(
-      switchMap(headers => 
-        this.http.get(`${this.apiUrl}/albums/${albumId}`, { headers })
-      )
-    );
+    return this.http.get(`${this.apiUrl}/albums/${albumId}`);
   }
 
   /**
@@ -110,10 +37,8 @@ export class SpotifyService {
    * @returns An Observable that emits the track details
    */
   getTrackDetails(trackIds: string): Observable<any> {
-    return this.getHeaders().pipe(
-      switchMap(headers => 
-        this.http.get(`${this.apiUrl}/tracks?ids=${trackIds}`, { headers })
-      )
-    );
+    return this.http.get(`${this.apiUrl}/tracks`, {
+      params: { ids: trackIds }
+    });
   }
 }

@@ -91,7 +91,7 @@ export class SpotifyDetailComponent implements OnInit {
       }
     });
 
-    this.titleService.setTitle('Music Search App - Loading Album Details'); // Set the default title of the page
+    this.titleService.setTitle('MetaMusicFinder - Loading Album Details'); // Set the default title of the page
   }
 
   /**

@@ -1,25 +1,18 @@
-# Cross-Platform Music Link Aggregator
+# MetaMusicFinder
 
 ## Overview
 
-This Cross-Platform Music Link Aggregator is an Angular-based web application that allows users to search for music tracks using the Spotify API and then aggregates links to the same track across various music platforms. It provides a user-friendly interface for discovering where a particular track is available, showcasing modern web development practices and API integration techniques.
+MetaMusicFinder is an Angular-based web application that revolutionizes the way users discover and access music across various platforms. By leveraging the Spotify API for comprehensive music searches, this tool aggregates links to tracks across multiple music streaming services, providing a seamless experience for music enthusiasts to find their favorite songs on their preferred platforms.
 
 ## Key Features
 
-- **Music Search**: Users can search for tracks using keywords, artist names, or song titles via the Spotify API.
-- **Cross-Platform Link Aggregation**: The app fetches and displays links to the searched track from multiple music platforms.
-- **Responsive Results Display**: Search results and aggregated links are presented in a clean, responsive layout.
-- **Detailed Track Information**: For each track, the app shows:
-  - Track name
-  - Artist(s)
-  - Album
-  - Release date
-  - Album cover image
-  - Links to various music platforms
-  - ISRC (International Standard Recording Code)
-- **Pagination**: Initially displays a limited number of results with a "Show More" button to load additional results.
-- **Animations**: Smooth fade-in animations for search results to enhance user experience.
-- **Routing**: Implemented Angular routing for navigation between search results and detailed track views.
+- **Powerful Music Search**: Utilize Spotify's extensive database to search for tracks by keywords, artists, or song titles.
+- **Multi-Platform Link Aggregation**: Instantly find where a track is available across various music streaming services.
+- **Intuitive User Interface**: Clean, responsive design for effortless navigation and search result viewing.
+- **Comprehensive Track Details**: Display rich information including track name, artist(s), album, release date, cover art, and ISRC.
+- **Dynamic Results Loading**: Pagination with a "Show More" option for efficient browsing of search results.
+- **Engaging User Experience**: Smooth animations enhance the visual appeal and responsiveness of the application.
+- **Seamless Navigation**: Angular routing enables fluid movement between search results and detailed track views.
 
 ## Technologies Used
 
@@ -28,29 +21,79 @@ This Cross-Platform Music Link Aggregator is an Angular-based web application th
 - RxJS for reactive programming
 - Angular Animations
 - Spotify Web API
-- Custom API integration for fetching links from various music platforms
+- Express.js backend for secure API handling
+- Docker for easy deployment and scalability
 
-## Goals of the Project
+## Setup
 
-1. Demonstrate the ability to create a web application that aggregates data from multiple sources.
-2. Showcase proficiency in building modern, responsive web applications using Angular.
-3. Highlight skills in integrating and working with various third-party APIs.
-4. Implement best practices in component design, state management, and responsive UI development.
-5. Provide a useful tool for music listeners to find their favorite tracks across different platforms.
-6. Demonstrate understanding of asynchronous programming and efficient data handling in web applications.
+1. Clone the repository:
+   ```
+   git clone https://github.com/eXcessMusic/MetaMusicFinder
+   cd metamusicfinder
+   ```
 
-## Future Enhancement Ideas
+2. Install dependencies:
+   ```
+   npm install
+   ```
 
-- Expand the range of supported music platforms.
-- Implement user accounts to save favorite tracks and search history.
-- Add more detailed artist and album information pages.
-- Integrate music preview functionality where available.
-- Implement advanced search filters (by genre, year, etc.).
+3. Configure environment variables:
+   - Copy `.env.example` to `.env`
+   - Add your Spotify API credentials to the `.env` file
+
+4. Launch the application:
+   ```
+   npm start
+   ```
+
+5. Access MetaMusicFinder at `http://localhost:3000` in your web browser
+
+## Development
+
+For development mode with hot-reloading:
+```
+npm run start:dev
+```
+
+## Production Build
+
+Create a production-ready build:
+```
+npm run build
+```
+
+## Docker Deployment
+
+1. Build the Docker image:
+   ```
+   docker build -t metamusicfinder .
+   ```
+
+2. Run the Docker container:
+   ```
+   docker run -p 3000:3000 --env-file .env metamusicfinder
+   ```
+
+## Project Objectives
+
+- Showcase advanced web application development using Angular and modern JavaScript practices.
+- Demonstrate expertise in integrating and manipulating data from multiple third-party APIs.
+- Implement robust front-end architecture with emphasis on performance and user experience.
+- Provide a valuable tool for music discovery and cross-platform accessibility.
+- Exhibit proficiency in asynchronous programming and efficient data management in web applications.
+
+## Future Enhancements
+
+- Expand music platform integrations for broader coverage.
+- Introduce user accounts for personalized experiences and saved preferences.
+- Develop detailed artist and album profile pages.
+- Implement music preview capabilities where supported by platforms.
+- Add advanced search and filtering options (e.g., by genre, release year, popularity).
 
 ## About the Developer
 
-This project was developed by Thibault Paillon as a demonstration of web development skills, API integration, and user interface design. It serves as a portfolio piece to showcase the ability to create practical, user-friendly web applications that solve real-world problems.
+MetaMusicFinder is created by Thibault Paillon, demonstrating a fusion of technical expertise in web development, API integration, and intuitive UI/UX design. This project stands as a testament to the ability to conceptualize and execute complex, user-centric web applications that address real-world needs in the digital music landscape.
 
 ---
 
-Developed with ♥ by Thibault Paillon
+Crafted with ♥ by Thibault Paillon

@@ -3,10 +3,9 @@
   "version": "1.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "node config-env.mjs && ng serve",
-    "config": "node config-env.mjs",
-    "prebuild": "npm run config",
-    "build": "node config-env.mjs && ng build --configuration production",
+    "start": "node server/server.js",
+    "start:dev": "ng serve",
+    "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:music-search-angular": "node dist/music-search-angular/server/main.server.mjs"
@@ -24,6 +23,9 @@
     "@angular/router": "^17.1.0",
     "@angular/ssr": "^17.1.3",
     "express": "^4.18.2",
+    "axios": "^1.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"
