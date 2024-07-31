@@ -87,7 +87,6 @@ npm run build
 - Expand music platform integrations for broader coverage.
 - Introduce user accounts for personalized experiences and saved preferences.
 - Develop detailed artist and album profile pages.
-- Implement music preview capabilities where supported by platforms.
 - Add advanced search and filtering options (e.g., by genre, release year, popularity).
 
 ## About the Developer
