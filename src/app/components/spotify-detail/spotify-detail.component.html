@@ -1,11 +1,5 @@
 <title *ngIf="detailedAlbum">Music Search App - {{ detailedAlbum.name }} by {{ detailedAlbum.artists }}</title>
 <title *ngIf="!detailedAlbum">Music Search App</title>
-    <!-- Loading spinner -->
-    <div *ngIf="isLoading" class="loading-spinner results-container">
-        <div class="spinner"></div>
-        <p class="loading-text">Loading...</p>
-        <p class="loading-subtext">Don't worry, it won't take long (or any time at all 🎉)</p>
-    </div>
 <div *ngIf="detailedAlbum" class="album-details" @fadeInOut>
     <button (click)="goBack()" class="back-button">⬅ Back</button>
     <div class="album-header">
@@ -97,7 +91,7 @@
     </div>
     <div *ngIf="isLoading" class="loading-spinner">
         <div class="spinner"></div>
-        <p class="loading-text">Loading...</p>
+        <p class="loading-text">Fetching the platform's links...</p>
         <p class="loading-subtext">Don't worry, it won't take long (or any time at all 🎉)</p>
     </div>
 </div>
