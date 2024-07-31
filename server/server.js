@@ -8,6 +8,7 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const app = express();
 const port = process.env.PORT || 3000;
+const host = '0.0.0.0';  // Added this line for Railway
 
 app.use(cors());
 app.use(express.json());
@@ -139,6 +140,6 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist/music-search-angular/browser/index.html'));
 });
 
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+app.listen(port, host, () => {
+    console.log(`Server running on http://${host}:${port}`);
 });
