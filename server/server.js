@@ -4,6 +4,7 @@ const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
 require('dotenv').config();
+const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -23,6 +24,18 @@ console.log('Spotify Client Secret available:', !!spotifyClientSecret); */
 
 // Serve static files from the Angular app build directory
 app.use(express.static(path.join(__dirname, 'dist/music-search-angular/browser')));
+
+// Proxy middleware options
+const songlinkApiProxy = createProxyMiddleware({
+    target: 'https://api.song.link', // URL of the Songlink API
+    changeOrigin: true,
+    pathRewrite: {
+      '^/songlink-api': '', // remove the path prefix when forwarding the request
+    },
+});
+
+// Use the proxy middleware
+app.use('/songlink-api', songlinkApiProxy);
 
 async function getSpotifyAccessToken() {
     if (!spotifyClientId || !spotifyClientSecret) {

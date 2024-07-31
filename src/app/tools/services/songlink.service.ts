@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
+
+
 
 /**
  * Service for interacting with the Songlink API
@@ -10,7 +13,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class SonglinkService {
-  private apiUrl = 'https://api.song.link/v1-alpha.1/links';
+  private apiUrl = `${environment.songlinkProxyUrl}/v1-alpha.1/links`;
 
   constructor(private http: HttpClient) { }
 

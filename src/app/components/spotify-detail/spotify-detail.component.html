@@ -1,6 +1,12 @@
 <title *ngIf="detailedAlbum">Music Search App - {{ detailedAlbum.name }} by {{ detailedAlbum.artists }}</title>
 <title *ngIf="!detailedAlbum">Music Search App</title>
-<div *ngIf="detailedAlbum" class="album-details">
+    <!-- Loading spinner -->
+    <div *ngIf="isLoading" class="loading-spinner results-container">
+        <div class="spinner"></div>
+        <p class="loading-text">Loading...</p>
+        <p class="loading-subtext">Don't worry, it won't take long (or any time at all 🎉)</p>
+    </div>
+<div *ngIf="detailedAlbum" class="album-details" @fadeInOut>
     <button (click)="goBack()" class="back-button">⬅ Back</button>
     <div class="album-header">
         <img
@@ -38,10 +44,7 @@
         </div>
     </div>
 
-    <div
-        *ngIf="detailedAlbum.tracks && detailedAlbum.tracks.length > 0"
-        class="track-list"
-    >
+    <div *ngIf="detailedAlbum.tracks && detailedAlbum.tracks.length > 0" class="track-list" @fadeInOut>
         <h3>Tracks</h3>
         <ul>
             <li *ngFor="let track of detailedAlbum.tracks" class="track-item">
@@ -92,8 +95,6 @@
         <button *ngIf="showAllPlatforms" (click)="toggleShowAllPlatforms()" class="show-all-button">Show main platforms</button>
         <button (click)="saveUrlsToFile()" class="save-button"><i class="fa-solid fa-floppy-disk"></i> Save All URL's as txt file</button>
     </div>
-
-    <!-- Loading spinner -->
     <div *ngIf="isLoading" class="loading-spinner">
         <div class="spinner"></div>
         <p class="loading-text">Loading...</p>
