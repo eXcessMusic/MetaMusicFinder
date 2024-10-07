@@ -135,6 +135,63 @@ app.get('/api/tracks', async (req, res) => {
     }
 });
 
+// New route for sending data to Django
+app.post('/api/send-to-django', async (req, res) => {
+    try {
+        const response = await axios.post('http://your-django-api.com/endpoint', req.body);
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error sending data to Django:', error);
+        res.status(500).json({ error: 'Failed to communicate with Django' });
+    }
+});
+
+// New route for external searches
+app.get('/api/external-search', async (req, res) => {
+    try {
+        const { query } = req.query;
+        if (!query) {
+            return res.status(400).json({ error: 'Query parameter is required' });
+        }
+
+        // Search Spotify
+        const accessToken = await getSpotifyAccessToken();
+        const spotifyResponse = await axios.get('https://api.spotify.com/v1/search', {
+        params: { q: query, type: 'track' },
+        headers: { 'Authorization': `Bearer ${accessToken}` }
+        });
+
+        if (spotifyResponse.data.tracks.items.length === 0) {
+            return res.status(404).json({ error: 'No results found' });
+        }
+
+        const track = spotifyResponse.data.tracks.items[0];
+        const spotifyUrl = track.external_urls.spotify;
+
+        // Get links from Songlink
+        const songlinkResponse = await axios.get(`${process.env.SONGLINK_API_URL}/links`, {
+            params: { url: spotifyUrl }
+        });
+
+        // Combine the data
+        const result = {
+            name: track.name,
+            artist: track.artists.map(a => a.name).join(', '),
+            release_date: track.album.release_date,
+            spotify_url: spotifyUrl,
+            soundcloud_url: songlinkResponse.data.linksByPlatform?.soundcloud?.url || '',
+            applemusic_url: songlinkResponse.data.linksByPlatform?.appleMusic?.url || '',
+            youtube_url: songlinkResponse.data.linksByPlatform?.youtube?.url || '',
+            deezer_url: songlinkResponse.data.linksByPlatform?.deezer?.url || ''
+        };
+
+        res.json(result);
+    } catch (error) {
+        console.error('Error in external search:', error);
+        res.status(500).json({ error: 'An error occurred while searching' });
+    }
+});
+
 // This should be the last route
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist/music-search-angular/browser/index.html'));

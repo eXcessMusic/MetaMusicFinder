@@ -3,6 +3,7 @@ import { SpotifyService } from '../../tools/services/spotify-service.service';
 import { catchError, finalize } from 'rxjs/operators';
 import { Title } from '@angular/platform-browser';
 import { of } from 'rxjs';
+import { ExternalSearchService } from '../../tools/services/external-search.service';
 
 /**
  * Component for handling music search functionality
@@ -28,7 +29,11 @@ export class MusicSearchComponent implements OnInit {
    * @param spotifyService Injected SpotifyService for making API calls to Spotify
    * @param titleService Injected Title service for setting page title
    */
-  constructor(private spotifyService: SpotifyService, private titleService: Title) {}
+  constructor(
+    private spotifyService: SpotifyService,
+    private externalSearchService: ExternalSearchService,
+    private titleService: Title
+  ) {}
 
   ngOnInit() {
     this.titleService.setTitle('MetaMusicFinder - Search'); // Set the default title of the page
@@ -70,5 +75,14 @@ export class MusicSearchComponent implements OnInit {
           }
         });
     }
+  }
+
+  externalSearch(query: string) {
+    return this.externalSearchService.searchSong(query).pipe(
+      catchError(error => {
+        console.error('Error in external search:', error);
+        return of({ error: 'An error occurred while searching. Please try again.' });
+      })
+    );
   }
 }
