@@ -169,7 +169,7 @@ app.get('/api/external-search', async (req, res) => {
         const spotifyUrl = track.external_urls.spotify;
 
         // Get links from Songlink
-        const songlinkResponse = await axios.get(`${process.env.SONGLINK_API_URL}/links`, {
+        const songlinkResponse = await axios.get(`https://api.song.link/v1-alpha.1/links`, {
             params: { url: spotifyUrl }
         });
 
