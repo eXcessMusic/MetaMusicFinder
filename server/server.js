@@ -215,56 +215,69 @@ app.get("/api/track-details", async (req, res) => {
     try {
         const { spotify_url } = req.query;
         if (!spotify_url) {
-            return res
-                .status(400)
-                .json({ error: "Spotify URL parameter is required" });
+            return res.status(400).json({ error: "Spotify URL parameter is required" });
         }
 
-        // Extract track ID from Spotify URL
-        const trackId = spotify_url.split("/").pop();
-
-        // Get Spotify access token
         const accessToken = await getSpotifyAccessToken();
 
-        // Fetch track details from Spotify
-        const spotifyResponse = await axios.get(
-            `https://api.spotify.com/v1/tracks/${trackId}`,
-            {
+        // Extract ID from Spotify URL
+        const id = spotify_url.split("/").pop().split("?")[0];
+        
+        // Determine if it's a track or album/EP
+        const isTrack = spotify_url.includes("/track/");
+        
+        let spotifyResponse;
+        if (isTrack) {
+            spotifyResponse = await axios.get(`https://api.spotify.com/v1/tracks/${id}`, {
                 headers: { Authorization: `Bearer ${accessToken}` },
-            }
-        );
+            });
+        } else {
+            // Assume it's an album/EP
+            spotifyResponse = await axios.get(`https://api.spotify.com/v1/albums/${id}`, {
+                headers: { Authorization: `Bearer ${accessToken}` },
+            });
+        }
+
+        let previewUrl = null;
+        if (isTrack) {
+            previewUrl = spotifyResponse.data.preview_url;
+        } else if (spotifyResponse.data.tracks && spotifyResponse.data.tracks.items.length > 0) {
+            // For albums/EPs, get the preview URL of the first track
+            previewUrl = spotifyResponse.data.tracks.items[0].preview_url;
+        }
 
         // Fetch additional links from Songlink
-        const songlinkResponse = await axios.get(
-            `https://api.song.link/v1-alpha.1/links`,
-            {
-                params: { url: spotify_url },
-            }
-        );
+        const songlinkResponse = await axios.get(`https://api.song.link/v1-alpha.1/links`, {
+            params: { url: spotify_url },
+        });
 
         // Combine the data
         const result = {
             name: spotifyResponse.data.name,
-            artist: spotifyResponse.data.artists.map((a) => a.name).join(", "),
-            artwork: spotifyResponse.data.album.images[0].url,
-            preview_url: spotifyResponse.data.preview_url,
-            release_date: spotifyResponse.data.album.release_date,
+            artist: isTrack 
+                ? spotifyResponse.data.artists.map((a) => a.name).join(", ")
+                : spotifyResponse.data.artists[0].name,
+            artwork: isTrack 
+                ? spotifyResponse.data.album.images[0].url
+                : spotifyResponse.data.images[0].url,
+            release_date: isTrack
+                ? spotifyResponse.data.album.release_date
+                : spotifyResponse.data.release_date,
+            preview_url: previewUrl || "",
             spotify_url: spotify_url,
-            soundcloud_url:
-                songlinkResponse.data.linksByPlatform?.soundcloud?.url || "",
-            applemusic_url:
-                songlinkResponse.data.linksByPlatform?.appleMusic?.url || "",
-            youtube_url:
-                songlinkResponse.data.linksByPlatform?.youtube?.url || "",
-            deezer_url:
-                songlinkResponse.data.linksByPlatform?.deezer?.url || "",
+            soundcloud_url: songlinkResponse.data.linksByPlatform?.soundcloud?.url || "",
+            applemusic_url: songlinkResponse.data.linksByPlatform?.appleMusic?.url || "",
+            youtube_url: songlinkResponse.data.linksByPlatform?.youtube?.url || "",
+            deezer_url: songlinkResponse.data.linksByPlatform?.deezer?.url || "",
+            type: isTrack ? "track" : spotifyResponse.data.album_type,
         };
 
         res.json(result);
     } catch (error) {
-        console.error("Error fetching track details:", error);
+        console.error("Error fetching details:", error);
         res.status(500).json({
-            error: "An error occurred while fetching track details",
+            error: "An error occurred while fetching details",
+            details: error.message
         });
     }
 });
