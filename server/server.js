@@ -199,6 +199,7 @@ app.get("/api/external-search", async (req, res) => {
             name: track.name,
             artist: track.artists.map((a) => a.name).join(", "),
             spotify_url: track.external_urls.spotify,
+            preview_url: track.preview_url,
             album: track.album.name,
             release_date: track.album.release_date,
         }));
