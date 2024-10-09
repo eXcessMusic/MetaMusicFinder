@@ -28,6 +28,7 @@ export class ExternalSearchService {
                 name: track.name,
                 artist: track.artists.map((a: any) => a.name).join(', '),
                 release_date: track.album.release_date,
+                preview_url: track.preview_url,
                 spotify_url: spotifyUrl,
                 soundcloud_url: songlinkResponse.linksByPlatform?.soundcloud?.url || '',
                 applemusic_url: songlinkResponse.linksByPlatform?.appleMusic?.url || '',
