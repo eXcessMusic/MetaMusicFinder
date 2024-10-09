@@ -247,6 +247,7 @@ app.get("/api/track-details", async (req, res) => {
             name: spotifyResponse.data.name,
             artist: spotifyResponse.data.artists.map((a) => a.name).join(", "),
             artwork: spotifyResponse.data.album.images[0].url,
+            preview_url: spotifyResponse.data.preview_url,
             release_date: spotifyResponse.data.album.release_date,
             spotify_url: spotify_url,
             soundcloud_url:
