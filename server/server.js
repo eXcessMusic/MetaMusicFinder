@@ -3,7 +3,7 @@ const axios = require("axios");
 const cors = require("cors");
 const path = require("path");
 const fs = require("fs");
-require("dotenv").config();
+require("dotenv").config({ path: path.resolve(__dirname, '../.env') });
 const { createProxyMiddleware } = require("http-proxy-middleware");
 
 const app = express();
@@ -39,6 +39,46 @@ const songlinkApiProxy = createProxyMiddleware({
 
 // Use the proxy middleware
 app.use("/songlink-api", songlinkApiProxy);
+
+/**
+ * Safely attempts to find an alternative preview URL from Deezer
+ * @param {Object} track The track object from Spotify
+ * @returns {Promise<string|null>} The preview URL or null if not found
+ */
+async function findAlternativePreviewUrl(track) {
+    if (!track || typeof track !== 'object') return null;
+    if (track.preview_url) return track.preview_url;
+    
+    try {
+        // Safely extract track name and artist
+        const trackName = track.name || '';
+        const artistName = track.artists && 
+                          track.artists.length > 0 && 
+                          track.artists[0].name ? 
+                          track.artists[0].name : '';
+        
+        if (!trackName || !artistName) return null;
+        
+        // Create a safe search query
+        const searchQuery = encodeURIComponent(`${trackName} ${artistName}`);
+        
+        // Call Deezer API
+        const deezerResponse = await axios.get(`https://api.deezer.com/search?q=${searchQuery}&limit=1`);
+        
+        if (deezerResponse.data && 
+            deezerResponse.data.data && 
+            deezerResponse.data.data.length > 0 && 
+            deezerResponse.data.data[0].preview) {
+            console.log(`Found Deezer preview for: ${trackName} by ${artistName}`);
+            return deezerResponse.data.data[0].preview;
+        }
+        
+        return null;
+    } catch (error) {
+        console.error(`Error finding alternative preview:`, error.message);
+        return null;
+    }
+}
 
 async function getSpotifyAccessToken() {
     if (!spotifyClientId || !spotifyClientSecret) {
@@ -95,6 +135,7 @@ app.get("/api/search", async (req, res) => {
             }
         );
 
+        // Send the Spotify response as-is - we'll handle missing previews in the frontend
         res.json(spotifyResponse.data);
     } catch (error) {
         console.error("Error in /api/search:", error);
@@ -145,6 +186,25 @@ app.get("/api/tracks", async (req, res) => {
                 },
             }
         );
+
+        // Try to find missing preview URLs
+        if (spotifyResponse.data && spotifyResponse.data.tracks && Array.isArray(spotifyResponse.data.tracks)) {
+            for (let i = 0; i < spotifyResponse.data.tracks.length; i++) {
+                const track = spotifyResponse.data.tracks[i];
+                // Only if preview_url is null or undefined
+                if (track && !track.preview_url) {
+                    try {
+                        const alternativePreview = await findAlternativePreviewUrl(track);
+                        if (alternativePreview) {
+                            track.preview_url = alternativePreview;
+                        }
+                    } catch (previewError) {
+                        console.error("Error finding preview:", previewError);
+                        // Continue even if finding preview fails
+                    }
+                }
+            }
+        }
 
         res.json(spotifyResponse.data);
     } catch (error) {
@@ -227,23 +287,52 @@ app.get("/api/track-details", async (req, res) => {
         const isTrack = spotify_url.includes("/track/");
         
         let spotifyResponse;
+        let previewUrl = null;
+        
         if (isTrack) {
             spotifyResponse = await axios.get(`https://api.spotify.com/v1/tracks/${id}`, {
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
+            
+            // Try to find alternative preview
+            if (!spotifyResponse.data.preview_url) {
+                try {
+                    const alternativePreview = await findAlternativePreviewUrl(spotifyResponse.data);
+                    if (alternativePreview) {
+                        spotifyResponse.data.preview_url = alternativePreview;
+                    }
+                } catch (previewError) {
+                    console.error("Error finding preview:", previewError);
+                }
+            }
+            
+            previewUrl = spotifyResponse.data.preview_url || "";
         } else {
             // Assume it's an album/EP
             spotifyResponse = await axios.get(`https://api.spotify.com/v1/albums/${id}`, {
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
-        }
-
-        let previewUrl = null;
-        if (isTrack) {
-            previewUrl = spotifyResponse.data.preview_url;
-        } else if (spotifyResponse.data.tracks && spotifyResponse.data.tracks.items.length > 0) {
-            // For albums/EPs, get the preview URL of the first track
-            previewUrl = spotifyResponse.data.tracks.items[0].preview_url;
+            
+            // For albums, check the first track
+            if (spotifyResponse.data.tracks && 
+                spotifyResponse.data.tracks.items && 
+                spotifyResponse.data.tracks.items.length > 0) {
+                
+                const firstTrack = spotifyResponse.data.tracks.items[0];
+                
+                if (!firstTrack.preview_url) {
+                    try {
+                        const alternativePreview = await findAlternativePreviewUrl(firstTrack);
+                        if (alternativePreview) {
+                            firstTrack.preview_url = alternativePreview;
+                        }
+                    } catch (previewError) {
+                        console.error("Error finding preview for first track:", previewError);
+                    }
+                }
+                
+                previewUrl = firstTrack.preview_url || "";
+            }
         }
 
         // Fetch additional links from Songlink
@@ -255,21 +344,26 @@ app.get("/api/track-details", async (req, res) => {
         const result = {
             name: spotifyResponse.data.name,
             artist: isTrack 
-                ? spotifyResponse.data.artists.map((a) => a.name).join(", ")
-                : spotifyResponse.data.artists[0].name,
+                ? spotifyResponse.data.artists && spotifyResponse.data.artists.map((a) => a.name).join(", ")
+                : spotifyResponse.data.artists && spotifyResponse.data.artists[0] && spotifyResponse.data.artists[0].name || "",
             artwork: isTrack 
-                ? spotifyResponse.data.album.images[0].url
-                : spotifyResponse.data.images[0].url,
+                ? (spotifyResponse.data.album && 
+                   spotifyResponse.data.album.images && 
+                   spotifyResponse.data.album.images[0] && 
+                   spotifyResponse.data.album.images[0].url) || ""
+                : (spotifyResponse.data.images && 
+                   spotifyResponse.data.images[0] && 
+                   spotifyResponse.data.images[0].url) || "",
             release_date: isTrack
-                ? spotifyResponse.data.album.release_date
-                : spotifyResponse.data.release_date,
-            preview_url: previewUrl || "",
+                ? (spotifyResponse.data.album && spotifyResponse.data.album.release_date) || ""
+                : spotifyResponse.data.release_date || "",
+            preview_url: previewUrl,
             spotify_url: spotify_url,
             soundcloud_url: songlinkResponse.data.linksByPlatform?.soundcloud?.url || "",
             applemusic_url: songlinkResponse.data.linksByPlatform?.appleMusic?.url || "",
             youtube_url: songlinkResponse.data.linksByPlatform?.youtube?.url || "",
             deezer_url: songlinkResponse.data.linksByPlatform?.deezer?.url || "",
-            type: isTrack ? "track" : spotifyResponse.data.album_type,
+            type: isTrack ? "track" : spotifyResponse.data.album_type || "",
         };
 
         res.json(result);

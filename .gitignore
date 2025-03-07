@@ -44,4 +44,7 @@ Thumbs.db
 # Environment files (for Spotify API keys)
 .env
 
-repopack-output.txt
+repomix-output.txt
+repomix-output.txt
+
+server.js.backup
